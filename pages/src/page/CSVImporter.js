@@ -3,7 +3,7 @@
 Ext.define('Site.page.CSVImporter', {
     singleton: true,
     requires: [
-        // 'Slate.csvImport.view.Importer'
+        'Slate.importer.view.CSVImporter'
     ],
 
     constructor: function() {
@@ -12,13 +12,10 @@ Ext.define('Site.page.CSVImporter', {
 
     onDocReady: function() {
         var me = this;
-            // siteEnv = window.SiteEnvironment || {};
 
         // render importer component
-        // me.importer = Ext.create('Slate.cbl.view.student.Dashboard', {
-        //     renderTo: Ext.get('studentDashboardCt')
-        // });
-
-        Ext.Msg.alert('Status', '!!!');
+        me.importer = Ext.create('Slate.importer.view.CSVImporter', {
+            renderTo: Ext.get('csvImportCt')
+        });
     }
 });
