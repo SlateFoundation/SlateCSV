@@ -8,10 +8,9 @@
 
 		<title>Enrollments Upload Wizard &mdash; dev-turnkey</title>
 
-		<link rel='stylesheet' type='text/css' href='/min/css/main.css?_sha1=10ecce70938a489abbf7294a45a21c72d16a58af'>
-		<link rel='stylesheet' type='text/css' href='/ext/packages/ext-theme-neptune/build/resources/ext-theme-neptune-all-debug.css'>
+		<link rel='stylesheet' type='text/css' href='./slate-site.css'>
+		<link rel='stylesheet' type='text/css' href='../ext-5.1.1.451/packages/ext-theme-neptune/build/resources/ext-theme-neptune-all-debug.css'>
 
-		<script src='/min/js/modernizr.js?_sha1=825d9c8447b94a351d1d4ef9e50ad16c9e273421'></script> 
 		<script>document.addEventListener("touchstart", function(){ },false);</script> 
 	</head>
 
@@ -1238,7 +1237,7 @@
 	    			<div class="inner">
 	    				<a href="/">
 
-	    					<img class="site-logo" src="/img/logo.png?_sha1=9154875b81158dcdeeb10e9405e863932c8a38d3" height=80 alt="dev-turnkey">
+	    					<img class="site-logo" src="./img/logo.png" height=80 alt="dev-turnkey">
 
 	    					<div class="text">
 	    						<big class="site-name">dev-turnkey</big>
@@ -1504,11 +1503,14 @@
 				</div>
 			</footer>
 		</div> 
-		<script src="ext/build/ext-all-debug.js"></script>
-		<script src="pages/src/page/CSVImporter.js"></script>
+		<script src="../ext-5.1.1.451/build/ext-all-debug.js"></script>
 		<script>
 			Ext.scopeCss = true;
 			Ext.USE_NATIVE_JSON = true;
+			Ext.Loader.setPath({
+				'SlateCSV': './app',
+				'Site': '../pages/src'
+			});
 			Ext.require('Site.page.CSVImporter');
 		</script>
 	</body>
