@@ -1,5 +1,5 @@
-/*jslint browser: true, undef: true, plusplus: true */ /*global Ext*/
-Ext.define('Slate.importer.overrides.CustomVTypes', {
+/*jslint browser: true, undef: true */ /*global Ext*/
+Ext.define('SlateCSV.overrides.CustomVTypes', {
     override: 'Ext.form.field.VTypes',
 
     // Required fields
@@ -13,6 +13,6 @@ Ext.define('Slate.importer.overrides.CustomVTypes', {
         return this.yearRe.test(val);
     },
     yearRe: /\d{4}/,
-    yearText: 'must be 4 digit number'
+    yearText: 'Field must be 4 digit number'
 
 });
