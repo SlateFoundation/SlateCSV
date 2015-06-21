@@ -1,4 +1,5 @@
 /sencha-build/
+/sencha-workspace/SlateCSV/bootstrap.*
 /sencha-workspace/ext-*
 /sencha-workspace/packages/*
 /.emergence-*
