@@ -1,13 +1,13 @@
 /**
  * This class is the view model for the Main view of the application.
  */
-Ext.define('Slate.view.main.MainModel', {
+Ext.define('SlateCSV.view.main.MainModel', {
     extend: 'Ext.app.ViewModel',
 
     alias: 'viewmodel.main',
 
     data: {
-        name: 'Slate'
+        name: 'SlateCSV'
     }
 
     //TODO - add data, formulas and/or methods to support your view

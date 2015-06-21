@@ -1,11 +1,11 @@
-/*jslint browser: true, undef: true */ /*global Ext,Slate*/
-Ext.define('Slate.importer.view.CSVImporterController', {
+/*jslint browser: true, undef: true */ /*global Ext,SlateCSV*/
+Ext.define('SlateCSV.importer.view.CSVImporterController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.slate-importer-csv-importer',
     requires: [
-        'Slate.importer.CSV',
-        // 'Slate.importer.view.FieldMapping'
-        'Slate.importer.view.field.ComboBox'
+        'SlateCSV.importer.CSV',
+        // 'SlateCSV.importer.view.FieldMapping'
+        'SlateCSV.importer.view.field.ComboBox'
     ],
 
     config: {
@@ -39,7 +39,7 @@ Ext.define('Slate.importer.view.CSVImporterController', {
                     reader.onload = function(e) {
                         var csvText = reader.result,
                             useFirstRowForColumnNames = importerView.getUseFirstRowForColumnNames(),
-                            data = Slate.importer.CSV.toObjects(csvText, {
+                            data = SlateCSV.importer.CSV.toObjects(csvText, {
                                 headers: useFirstRowForColumnNames
                             });
                         importerView.setCsvText(csvText);
@@ -71,7 +71,7 @@ Ext.define('Slate.importer.view.CSVImporterController', {
             data = [];
 
         if (csvText) {
-            data = Slate.importer.CSV.toObjects(csvText, {
+            data = SlateCSV.importer.CSV.toObjects(csvText, {
                 headers: value
             });
         }

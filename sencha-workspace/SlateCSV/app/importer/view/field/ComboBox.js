@@ -1,4 +1,4 @@
-Ext.define('Slate.importer.view.field.ComboBox', {
+Ext.define('SlateCSV.importer.view.field.ComboBox', {
 	extend: 'Ext.form.field.ComboBox',
 	xtype: 'csv-upload-combobox',
 

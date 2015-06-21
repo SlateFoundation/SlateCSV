@@ -2,7 +2,7 @@
     /**
      * The application's namespace.
      */
-    "name": "Slate",
+    "name": "SlateCSV",
     
     /**
      * The version of the application.
@@ -53,13 +53,13 @@
     "sass": {
         /**
          * The root namespace to use when mapping *.scss files to classes in the
-         * sass/src and sass/var directories. For example, "Slate.view.Foo" would
-         * map to "sass/src/view/Foo.scss". If we changed this to "Slate.view" then
+         * sass/src and sass/var directories. For example, "SlateCSV" would
+         * map to "sass/src/view/Foo.scss". If we changed this to "SlateCSV" then
          * it would map to "sass/src/Foo.scss". To style classes outside the app's
          * root namespace, change this to "". Doing so would change the mapping of
-         * "Slate.view.Foo" to "sass/src/Slate/view/Foo.scss".
+         * "SlateCSV" to "sass/src/SlateCSV/view/Foo.scss".
          */
-        "namespace": "Slate"
+        "namespace": "SlateCSV"
     },
 
     /**

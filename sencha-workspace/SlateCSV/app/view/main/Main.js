@@ -5,11 +5,11 @@
  *
  * TODO - Replace this content of this view to suite the needs of your application.
  */
-Ext.define('Slate.view.main.Main', {
+Ext.define('SlateCSV.view.main.Main', {
     extend: 'Ext.container.Container',
     requires: [
-        'Slate.view.main.MainController',
-        'Slate.view.main.MainModel'
+        'SlateCSV.view.main.MainController',
+        'SlateCSV.view.main.MainModel'
     ],
 
     xtype: 'app-main',

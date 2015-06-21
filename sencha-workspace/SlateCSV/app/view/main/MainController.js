@@ -5,7 +5,7 @@
  *
  * TODO - Replace this content of this view to suite the needs of your application.
  */
-Ext.define('Slate.view.main.MainController', {
+Ext.define('SlateCSV.view.main.MainController', {
     extend: 'Ext.app.ViewController',
 
     requires: [

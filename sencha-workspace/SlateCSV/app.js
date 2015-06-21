@@ -4,14 +4,14 @@
  * Sencha Cmd when upgrading.
  */
 Ext.application({
-    name: 'Slate',
+    name: 'SlateCSV',
 
-    extend: 'Slate.Application',
+    extend: 'SlateCSV.Application',
     
-    // autoCreateViewport: 'Slate.view.main.Main'
+    // autoCreateViewport: 'SlateCSV.view.main.Main'
 	
     //-------------------------------------------------------------------------
-    // Most customizations should be made to Slate.Application. If you need to
+    // Most customizations should be made to SlateCSV.Application. If you need to
     // customize this file, doing so below this section reduces the likelihood
     // of merge conflicts when upgrading to new versions of Sencha Cmd.
     //-------------------------------------------------------------------------

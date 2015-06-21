@@ -1,8 +1,8 @@
-Ext.define('Slate.importer.view.CSVImporter', {
+Ext.define('SlateCSV.importer.view.CSVImporter', {
     extend: 'Ext.Container',
     xtype: 'slate-importer-csv-importer',
     requires: [
-        'Slate.importer.view.CSVImporterController'
+        'SlateCSV.importer.view.CSVImporterController'
     ],
 
     controller: 'slate-importer-csv-importer',

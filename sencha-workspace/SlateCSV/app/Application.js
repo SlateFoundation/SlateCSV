@@ -3,10 +3,10 @@
  * Ext.application(). This is the ideal place to handle application launch and initialization
  * details.
  */
-Ext.define('Slate.Application', {
+Ext.define('SlateCSV.Application', {
     extend: 'Ext.app.Application',
     
-    name: 'Slate',
+    name: 'SlateCSV',
 
     stores: [
         // TODO: add global / shared stores here

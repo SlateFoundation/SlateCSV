@@ -3,7 +3,7 @@
  * version: 0.71 (2012-11-19)
  * Copyrighted 2012 by Evan Plaice.
  */
-Ext.define('Slate.importer.CSV', {
+Ext.define('SlateCSV.importer.CSV', {
 	singleton: true,
 
 	config: {
@@ -97,8 +97,8 @@ Ext.define('Slate.importer.CSV', {
 			}
 
 			// escape regex-specific control chars
-			var escSeparator = Slate.importer.CSV.regExpEscape(separator);
-			var escDelimiter = Slate.importer.CSV.regExpEscape(delimiter);
+			var escSeparator = SlateCSV.importer.CSV.regExpEscape(separator);
+			var escDelimiter = SlateCSV.importer.CSV.regExpEscape(delimiter);
 
 			// compile the regEx str using the custom delimiter/separator
 			var match = /(D|S|\n|\r|[^DS\r\n]+)/;
@@ -272,8 +272,8 @@ Ext.define('Slate.importer.CSV', {
 			}
 
 			// escape regex-specific control chars
-			var escSeparator = Slate.importer.CSV.regExpEscape(separator);
-			var escDelimiter = Slate.importer.CSV.regExpEscape(delimiter);
+			var escSeparator = SlateCSV.importer.CSV.regExpEscape(separator);
+			var escDelimiter = SlateCSV.importer.CSV.regExpEscape(delimiter);
 
 			// compile the regEx str using the custom delimiter/separator
 			var match = /(D|S|\n|\r|[^DS\r\n]+)/;
@@ -436,8 +436,8 @@ Ext.define('Slate.importer.CSV', {
 			// checked for a cached regEx first
 			if (!options.match) {
 				// escape regex-specific control chars
-				var escSeparator = Slate.importer.CSV.regExpEscape(separator);
-				var escDelimiter = Slate.importer.CSV.regExpEscape(delimiter);
+				var escSeparator = SlateCSV.importer.CSV.regExpEscape(separator);
+				var escDelimiter = SlateCSV.importer.CSV.regExpEscape(delimiter);
 
 				// compile the regEx str using the custom delimiter/separator
 				var match = /(D|S|\n|\r|[^DS\r\n]+)/;
