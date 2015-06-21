@@ -19,10 +19,10 @@ Ext.define('SlateCSV.view.Importer', {
         validationToolTip: null,
         validationWindow: null,
         requiredFields: [
-//            'FirstName',
+            'FirstName',
             'LastName',
-  //          'StudentID',
-    //        'GraduationYear'
+            'StudentID',
+            'GraduationYear'
         ],
         importFields: [{
             "id": "none",
