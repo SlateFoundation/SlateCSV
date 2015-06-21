@@ -6,9 +6,7 @@
 Ext.application({
     name: 'SlateCSV',
 
-    extend: 'SlateCSV.Application',
-    
-    // autoCreateViewport: 'SlateCSV.view.main.Main'
+    extend: 'SlateCSV.Application'
 	
     //-------------------------------------------------------------------------
     // Most customizations should be made to SlateCSV.Application. If you need to

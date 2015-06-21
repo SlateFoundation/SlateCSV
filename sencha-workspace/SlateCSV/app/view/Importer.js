@@ -1,11 +1,12 @@
-Ext.define('SlateCSV.importer.view.CSVImporter', {
+/*jslint browser: true, undef: true, laxcomma:true *//*global Ext*/
+Ext.define('SlateCSV.view.Importer', {
     extend: 'Ext.Container',
-    xtype: 'slate-importer-csv-importer',
+    xtype: 'slatecsv-importer',
     requires: [
-        'SlateCSV.importer.view.CSVImporterController'
+        'SlateCSV.view.ImporterController'
     ],
 
-    controller: 'slate-importer-csv-importer',
+    controller: 'slatecsv-importer',
 
     config: {
         csvText: null,
@@ -25,7 +26,7 @@ Ext.define('SlateCSV.importer.view.CSVImporter', {
         }, {
             "label": "student first name preserve case",
             "fieldName": "FirstName",
-            "importer": "name-preserve",
+            "importer": "name-preserve"
         }, {
             "label": "student first name autocapitalize",
             "fieldName": "FirstName",
@@ -184,7 +185,7 @@ Ext.define('SlateCSV.importer.view.CSVImporter', {
 
     getMappedFields: function() {
         var me = this,
-            comboBoxes = me.query('csv-upload-combobox'),
+            comboBoxes = me.query('slatecsv-importerfield'),
             comboBoxesLength = comboBoxes.length,
             mappedFields = [],
             i = 0;

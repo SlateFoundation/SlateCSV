@@ -1,6 +1,7 @@
-Ext.define('SlateCSV.importer.view.field.ComboBox', {
+/*jslint browser: true, undef: true, laxcomma:true *//*global Ext*/
+Ext.define('SlateCSV.field.Importer', {
 	extend: 'Ext.form.field.ComboBox',
-	xtype: 'csv-upload-combobox',
+	xtype: 'slatecsv-importerfield',
 
 	forceSelection: true,
 	editable: false,

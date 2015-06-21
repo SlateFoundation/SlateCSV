@@ -1,11 +1,10 @@
-/*jslint browser: true, undef: true */ /*global Ext,SlateCSV*/
-Ext.define('SlateCSV.importer.view.CSVImporterController', {
+/*jslint browser: true, undef: true, laxcomma:true *//*global Ext, SlateCSV*/
+Ext.define('SlateCSV.view.ImporterController', {
     extend: 'Ext.app.ViewController',
-    alias: 'controller.slate-importer-csv-importer',
+    alias: 'controller.slatecsv-importer',
     requires: [
-        'SlateCSV.importer.CSV',
-        // 'SlateCSV.importer.view.FieldMapping'
-        'SlateCSV.importer.view.field.ComboBox'
+        'SlateCSV.util.CSV',
+        'SlateCSV.field.Importer'
     ],
 
     config: {
@@ -16,10 +15,10 @@ Ext.define('SlateCSV.importer.view.CSVImporterController', {
                 csvtextchange: 'onCSVTextChange',
                 updateusefirstrowforcolumnnames: 'onUseFirstRowForColumnNamesChange'
             },
-            'csv-upload-combobox': {
+            'slatecsv-importerfield': {
                 beforequery: 'onBeforeQueryComboBox',
                 select: 'onComboBoxSelect'
-            },
+            }
         }
     },
 
@@ -39,7 +38,7 @@ Ext.define('SlateCSV.importer.view.CSVImporterController', {
                     reader.onload = function(e) {
                         var csvText = reader.result,
                             useFirstRowForColumnNames = importerView.getUseFirstRowForColumnNames(),
-                            data = SlateCSV.importer.CSV.toObjects(csvText, {
+                            data = SlateCSV.util.CSV.toObjects(csvText, {
                                 headers: useFirstRowForColumnNames
                             });
                         importerView.setCsvText(csvText);
@@ -71,7 +70,7 @@ Ext.define('SlateCSV.importer.view.CSVImporterController', {
             data = [];
 
         if (csvText) {
-            data = SlateCSV.importer.CSV.toObjects(csvText, {
+            data = SlateCSV.util.CSV.toObjects(csvText, {
                 headers: value
             });
         }
@@ -84,7 +83,7 @@ Ext.define('SlateCSV.importer.view.CSVImporterController', {
     onBeforeQueryComboBox: function(queryPlan) {
         var view = this.getView(),
             comboBox = queryPlan.combo,
-            comboBoxes = view.query('csv-upload-combobox'),
+            comboBoxes = view.query('slatecsv-importerfield'),
             comboBoxesLength = comboBoxes.length,
             selectedValues = [],
             i = 0,
@@ -132,7 +131,7 @@ Ext.define('SlateCSV.importer.view.CSVImporterController', {
 
             for (; i < colCount; i++) {
                 fields.push({
-                    xtype: 'csv-upload-combobox',
+                    xtype: 'slatecsv-importerfield',
                     dataIndex: i,
                     fieldLabel: useFirstRowForColumnNames ? cols[i] : 'Column ' + (i + 1),
                     store: {
@@ -188,7 +187,7 @@ Ext.define('SlateCSV.importer.view.CSVImporterController', {
         var me = this,
             view = me.getView(),
             useFirstRowForColumnNames = view.getUseFirstRowForColumnNames(),
-            comboBoxes = view.query('csv-upload-combobox'),
+            comboBoxes = view.query('slatecsv-importerfield'),
             comboBoxesLength = comboBoxes.length,
             cols = Ext.Object.getKeys(row),
             i = 0,

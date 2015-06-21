@@ -5,14 +5,7 @@
  */
 Ext.define('SlateCSV.Application', {
     extend: 'Ext.app.Application',
-    
-    name: 'SlateCSV',
 
-    stores: [
-        // TODO: add global / shared stores here
-    ],
-    
-    launch: function () {
-        // TODO - Launch the application
-    }
+    name: 'SlateCSV',
+    controllers: ['Importer']
 });
