@@ -1,4 +1,4 @@
-/*jslint browser: true, undef: true, laxcomma:true *//*global Ext, SlateCSV*/
+/*jslint browser: true, undef: true, eqeq: true, plusplus: true */ /*global Ext,SlateCSV*/
 Ext.define('SlateCSV.view.ImporterController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.slatecsv-importer',
@@ -24,21 +24,20 @@ Ext.define('SlateCSV.view.ImporterController', {
 
     //event handlers
     onComponentRender: function(importerView) {
-        var me = this,
-            inputEl = importerView.el.down('input[name=csv]').dom,
-            firstRowRadiosQuery = importerView.el.query('input[name=first-row]'),
-            firstRowRadiosLength = firstRowRadiosQuery.length,
-            handleFileSelect = function(evt) {
-                //TODO handle if user doesn't want to lose changes
+        var inputEl = importerView.el.down('input[name=csv]').dom,
+                firstRowRadiosQuery = importerView.el.query('input[name=first-row]'),
+                firstRowRadiosLength = firstRowRadiosQuery.length,
+                handleFileSelect = function(evt) {
+                    //TODO handle if user doesn't want to lose changes
 
-                var files = evt.target.files,
-                    reader = new FileReader();
+                    var files = evt.target.files,
+                        reader = new FileReader();
 
-                if (files.length > 0) {
-                    reader.onload = function(e) {
-                        var csvText = reader.result,
-                            useFirstRowForColumnNames = importerView.getUseFirstRowForColumnNames(),
-                            data = SlateCSV.util.CSV.toObjects(csvText, {
+                    if (files.length > 0) {
+                        reader.onload = function() {
+                            var csvText = reader.result,
+                                useFirstRowForColumnNames = importerView.getUseFirstRowForColumnNames(),
+                                data = SlateCSV.util.CSV.toObjects(csvText, {
                                 headers: useFirstRowForColumnNames
                             });
                         importerView.setCsvText(csvText);
@@ -59,7 +58,7 @@ Ext.define('SlateCSV.view.ImporterController', {
         }
     },
 
-    onCSVTextChange: function(newCsvText) {
+    onCSVTextChange: function() {
         this.populateMappingForm();
     },
 
@@ -80,6 +79,12 @@ Ext.define('SlateCSV.view.ImporterController', {
         me.updatePreviewGrid();
     },
 
+    /**
+     * Event Handler. Before combo options are shown, this compiles a list of selected values in other
+     * combo boxes and removes them as options in this combo.
+     * @param {Object} queryPlan An object containing details about the query to be executed.
+     * @param {Ext.form.field.ComboBox} queryPlan.combo A reference to this ComboBox.
+     */
     onBeforeQueryComboBox: function(queryPlan) {
         var view = this.getView(),
             comboBox = queryPlan.combo,
@@ -87,11 +92,12 @@ Ext.define('SlateCSV.view.ImporterController', {
             comboBoxesLength = comboBoxes.length,
             selectedValues = [],
             i = 0,
-            store;
+            rec;
 
         for (; i < comboBoxesLength; i++) {
-            if (comboBoxes[i] != comboBox && comboBoxes[i].getValue()) {
-                selectedValues.push(comboBoxes[i].getValue());
+            if (comboBoxes[i] != comboBox && comboBoxes[i].getValue() && comboBoxes[i].getValue()!=="none") {
+                rec = comboBoxes[i].findRecordByValue(comboBoxes[i].getValue());
+                selectedValues.push(rec.get('fieldName'));
             }
         }
 
@@ -136,7 +142,7 @@ Ext.define('SlateCSV.view.ImporterController', {
                     fieldLabel: useFirstRowForColumnNames ? cols[i] : 'Column ' + (i + 1),
                     store: {
                         xclass: 'Ext.data.Store',
-                        fields: ['fieldName', 'importer', 'label'],
+                        fields: ['id', 'fieldName', 'transform', 'label', 'vtype'],
                         data: importerFields
                     }
                 });
@@ -152,17 +158,22 @@ Ext.define('SlateCSV.view.ImporterController', {
         var me = this,
             view = me.getView(),
             requiredFields = view.getRequiredFields(),
-            mappedFields = view.getMappedFields(),
-            mappedRequiredFields = Ext.Array.intersect(requiredFields, mappedFields),
+            mappedFieldNames = view.getMappedFieldNames(),
+            mappedRequiredFields = Ext.Array.intersect(requiredFields, mappedFieldNames),
+            unmappedRequiredFields = Ext.Array.difference(requiredFields, mappedRequiredFields),
             csvData = view.getCsvData(),
             selectedFields = selectedFields,
             status = {
                 mappedFields: 0,
+                unmappedFields: 0,
                 requiredFields: 0,
                 selectedColumns: 0,
-                totalColumns: 0
+                totalColumns: 0,
+                unmappedRequiredFields: unmappedRequiredFields
             },
             cols;
+
+        console.log(mappedFieldNames);
 
         if (mappedRequiredFields) {
             status.mappedFields = mappedRequiredFields.length;
@@ -170,8 +181,9 @@ Ext.define('SlateCSV.view.ImporterController', {
         if (requiredFields) {
             status.requiredFields = requiredFields.length;
         }
-        if (mappedFields) {
-            status.selectedColumns = mappedFields.length;
+        status.unmappedFields = status.requiredFields - status.mappedFields;
+        if (mappedFieldNames) {
+            status.selectedColumns = mappedFieldNames.length;
         }
         if (csvData && csvData.length > 0) {
             cols = Ext.Object.getKeys(csvData[0]);
@@ -192,17 +204,23 @@ Ext.define('SlateCSV.view.ImporterController', {
             cols = Ext.Object.getKeys(row),
             i = 0,
             object = {},
-            comboBox;
+            comboBox,
+            rec,
+            val,
+            fn;
 
         for (; i < comboBoxesLength; i++) {
             comboBox = comboBoxes[i];
-            if (comboBox.getValue()) {
-                if(useFirstRowForColumnNames) {
-                    object[comboBox.getValue()] = row[comboBox.getFieldLabel()];
+            if (comboBox.getValue() && comboBox.getValue()!=="none") {
+                rec = comboBox.findRecordByValue(comboBoxes[i].getValue());
+                val = useFirstRowForColumnNames ? row[comboBox.getFieldLabel()] : row[cols[comboBox.dataIndex]];
+                fn = rec.get('transform');
+
+                if (fn && typeof(fn) === 'function') {
+                    val = fn(val);
                 }
-                else {
-                    object[comboBox.getValue()] = row[cols[comboBox.dataIndex]];
-                }
+
+                object[rec.get('fieldName')] = val;
             }
         }
 
@@ -212,9 +230,8 @@ Ext.define('SlateCSV.view.ImporterController', {
     updatePreviewGrid: function() {
         var me = this,
             view = me.getView(),
-            importFields = view.getImportFields(),
             mappedFields = view.getMappedFields(),
-            mappedFieldsLength = mappedFields.length,
+            //mappedFieldsLength = mappedFields.length,
             csvData = view.getCsvData(),
             csvDataLength = csvData.length,
             maxPreviewRows = view.getMaxPreviewRows(),
@@ -222,25 +239,15 @@ Ext.define('SlateCSV.view.ImporterController', {
             gridColumns = [],
             gridStoreFields = [],
             i = 0,
-            findFieldFn = function(fieldName) {
-                return Ext.Array.findBy(importFields, function(item) {
-                    return item.fieldName == fieldName;
-                });
-            },
-            previewData = [],
-            fieldData;
+            previewData = [];
 
-        for (; i < mappedFieldsLength; i++) {
-            fieldData = findFieldFn(mappedFields[i]);
-
-            if (fieldData) {
-                gridStoreFields.push(mappedFields[i]);
-                gridColumns.push({
-                    dataIndex: mappedFields[i],
-                    text: fieldData.label
-                });
-            }
-        }
+        Ext.Array.each(mappedFields, function(field) {
+            gridStoreFields.push(field.get('fieldName'));
+            gridColumns.push({
+                dataIndex: field.get('fieldName'),
+                text: field.get('label')
+            });
+        });
 
         for (i = 0; i < Math.min(csvDataLength, maxPreviewRows); i++) {
             previewData.push(me.buildPreviewDataRow(csvData[i]));
@@ -257,5 +264,69 @@ Ext.define('SlateCSV.view.ImporterController', {
         } else {
             previewGrid.setHidden(true);
         }
+    },
+
+    onImportButtonClick: function() {
+        var me = this,
+            view = me.getView(),
+            useFirstRowForColumnNames = view.getUseFirstRowForColumnNames(),
+            comboBoxes = me.getValidComboBoxes(),
+            csvData = view.getCsvData(),
+            cols = Ext.Object.getKeys(csvData[0]),
+            vtypes = Ext.form.VTypes,
+            validations = [],
+            validationWindow = view.getValidationWindow(),
+            failures = 0;
+
+        Ext.Array.each(comboBoxes, function(combo) {
+            field = combo.findRecordByValue(combo.getValue());
+
+            if (field.get('vtype') && vtypes[field.get('vtype')] ) {
+                validations.push({
+                    fieldName: field.get('fieldName'),
+                    fieldLabel: field.get('label'),
+                    dataIndex: combo.dataIndex,
+                    label: combo.getFieldLabel(),
+                    vtype: field.get('vtype'),
+                    vtext: (field.get('vtypeText') || vtypes[field.get('vtype') +'Text']),
+                    invalidRows: []
+                });
+            }
+        });
+
+        Ext.Array.each(csvData, function(row,index) {
+            Ext.Array.each(validations, function(v) {
+                value = useFirstRowForColumnNames ? row[v.label] : row[cols[v.dataIndex]];
+
+                if (!vtypes[v.vtype](value)) {
+                    v.invalidRows.push(index);
+                    failures++;
+                }
+            });
+
+        });
+
+        validationWindow.down('slatecsv-validation-view').update({
+            failures: failures,
+            validations: validations
+        });
+
+        validationWindow.show();
+
+    },
+
+    /**
+     * Returns comboxes with a valid mapping
+     * @private
+     * @return {Array} An array of comboboxes that have a value set to an import field.
+     */
+    getValidComboBoxes: function() {
+        var view = this.getView(),
+            comboBoxes = view.query('slatecsv-importerfield');
+
+        return Ext.Array.filter(comboBoxes, function(combo) {
+            return (combo.getValue() && combo.getValue()!=="none");
+        });
     }
+
 });
