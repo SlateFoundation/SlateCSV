@@ -16,8 +16,10 @@ Ext.define('SlateCSV.controller.Importer', {
 
     // template methods
 	onLaunch: function() {
+        var bodyEl = Ext.getBody();
+
         this.getImporter({
-            renderTo: Ext.getBody().down('main.site')
+            renderTo: bodyEl.down('main.site') || bodyEl
         });
     }
 });
