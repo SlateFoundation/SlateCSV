@@ -6,7 +6,18 @@
  */
 Ext.define('SlateCSV.Application', {
     extend: 'Ext.app.Application',
+    requires: [
+        'Slate.API'
+    ],
 
     name: 'SlateCSV',
-    controllers: ['Importer']
+    controllers: ['Importer'],
+
+    init: function() {
+        var pageParams = Ext.Object.fromQueryString(location.search);
+
+        if (pageParams.apiHost) {
+            Slate.API.setHostname(pageParams.apiHost);
+        }
+    }
 });

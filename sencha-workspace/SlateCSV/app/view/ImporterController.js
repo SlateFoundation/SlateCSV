@@ -6,7 +6,7 @@ Ext.define('SlateCSV.view.ImporterController', {
         'SlateCSV.util.CSV',
         'SlateCSV.field.Importer',
         'Ext.data.Store',
-        'SlateAdmin.model.person.Person'
+        'Slate.model.person.Person'
     ],
 
     config: {
