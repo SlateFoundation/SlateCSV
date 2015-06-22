@@ -1,8 +1,8 @@
-/*jslint browser: true, undef: true, laxcomma:true *//*global Ext, SlateCSV*/
+/*jslint browser: true, undef: true, laxcomma:true *//*global Ext */
 Ext.define('SlateCSV.controller.Importer', {
     extend: 'Ext.app.Controller',
 
-	views: ['Importer'],
+    views: ['Importer'],
 
     refs: [{
         ref: 'importer',
@@ -15,7 +15,7 @@ Ext.define('SlateCSV.controller.Importer', {
 
 
     // template methods
-	onLaunch: function() {
+    onLaunch: function() {
         var bodyEl = Ext.getBody();
 
         this.getImporter({
