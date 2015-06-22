@@ -2,6 +2,10 @@
 Ext.define('SlateCSV.controller.Importer', {
     extend: 'Ext.app.Controller',
 
+    requires: [
+        'SlateCSV.importer.People'
+    ],
+
     views: ['Importer'],
 
     refs: [{
@@ -13,13 +17,15 @@ Ext.define('SlateCSV.controller.Importer', {
         cls: 'inner'
     }],
 
-
     // template methods
     onLaunch: function() {
-        var bodyEl = Ext.getBody();
+        var bodyEl = Ext.getBody(),
+            config = SlateCSV.importer.People.config;
 
-        this.getImporter({
+        config = Ext.apply(config,{
             renderTo: bodyEl.down('main.site') || bodyEl
         });
+
+        this.getImporter(config);
     }
 });
