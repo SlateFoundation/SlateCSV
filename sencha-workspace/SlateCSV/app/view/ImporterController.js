@@ -14,6 +14,7 @@ Ext.define('SlateCSV.view.ImporterController', {
         control: {
             '#': {
                 render: 'onComponentRender',
+                afterrender: 'onComponentAfterRender',
                 csvtextchange: 'onCSVTextChange',
                 updateusefirstrowforcolumnnames: 'onUseFirstRowForColumnNamesChange',
                 dataimportcontinue: 'onContinueButtonClick'
@@ -59,6 +60,20 @@ Ext.define('SlateCSV.view.ImporterController', {
         for (; i < firstRowRadiosLength; i++) {
             firstRowRadiosQuery[i].addEventListener('change', handleRadioChange, false);
         }
+    },
+
+    /**
+     * Event Handler. Set the header title based on the value for entityTitle in the importer class
+     * @param {SlateCSV.view.Importer} importerView
+     * @return null
+     */
+    onComponentAfterRender: function(importerView) {
+        var header = importerView.down('#header'),
+            title = {
+                entityTitle:importerView.getEntityTitle()
+            };
+
+        header.update(title);
     },
 
     onCSVTextChange: function() {

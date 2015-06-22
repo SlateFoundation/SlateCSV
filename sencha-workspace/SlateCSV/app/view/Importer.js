@@ -11,6 +11,7 @@ Ext.define('SlateCSV.view.Importer', {
     controller: 'slatecsv-importer',
 
     config: {
+        entityTitle: '',
         csvText: null,
         csvData: null,
         useFirstRowForColumnNames: true,
@@ -21,12 +22,17 @@ Ext.define('SlateCSV.view.Importer', {
         requiredFields: [],
         importFields: [],
         items: [{
-            id: 'instructions',
+            itemId: 'header',
+            xtype: 'container',
+            tpl: [
+                '<header class="page-header">',
+                '   <h1 class="header-title">{entityTitle} Upload Wizard</h1>',
+                '</header>'
+            ]
+        },{
+            itemId: 'instructions',
             xtype: 'component',
             html: [
-                '<header class="page-header">',
-                '   <h1 class="header-title">Enrollments Upload Wizard</h1>',
-                '</header>',
                 '<ol class="wizard-steps">',
                 '    <li class="wizard-step"><p>Download or compile a CSV file of all users and related data from your SIS, LMS, or spreadsheets. <a href="#">Example CSV</a></p></li>',
                 '    <li class="wizard-step"><p>Upload your CSV file:</p>',

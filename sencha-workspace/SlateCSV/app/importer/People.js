@@ -3,6 +3,7 @@ Ext.define('SlateCSV.importer.People', {
     singleton: true,
 
     config: {
+        entityTitle: 'Enrollments',
         requiredFields: [
             'FirstName',
             'LastName',
