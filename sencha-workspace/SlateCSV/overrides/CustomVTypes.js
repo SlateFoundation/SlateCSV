@@ -4,6 +4,9 @@ Ext.define('SlateCSV.overrides.CustomVTypes', {
 
     // Required fields
     required: function(val) {
+        if (typeof val === 'number') {
+            val = val.toString(); //turn numerical values into a string for required test
+        }
         return (val && val.length > 0);
     },
     requiredText: 'Field is required',
