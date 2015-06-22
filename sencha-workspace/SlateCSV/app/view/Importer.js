@@ -1,11 +1,11 @@
-/*jslint browser: true, undef: true, plusplus: true */ /*global Ext*/
+/*jslint browser: true, undef: true */ /*global Ext*/
 Ext.define('SlateCSV.view.Importer', {
     extend: 'Ext.Container',
     xtype: 'slatecsv-importer',
     requires: [
         'SlateCSV.view.ImporterController',
         'SlateCSV.overrides.CustomVTypes',
-        'SlateCSV.view.Validation'
+        'SlateCSV.view.ValidationResult'
     ],
 
     controller: 'slatecsv-importer',
@@ -25,84 +25,84 @@ Ext.define('SlateCSV.view.Importer', {
             'GraduationYear'
         ],
         importFields: [{
-            "id": "none",
-            "label": "None",
-            "fieldName": null
+            'id': 'none',
+            'label': 'None',
+            'fieldName': null
         }, {
-            "id": "student-first-name-preserve-case",
-            "label": "student first name preserve case",
-            "fieldName": "FirstName",
-            "vtype": "required"
+            'id': 'student-first-name-preserve-case',
+            'label': 'student first name preserve case',
+            'fieldName': 'FirstName',
+            'vtype': 'required'
         }, {
-            "id": "student-first-name-autocapitalize",
-            "label": "student first name autocapitalize",
-            "fieldName": "FirstName",
-            "vtype": "required",
-            "transform": Ext.util.Format.capitalize
+            'id': 'student-first-name-autocapitalize',
+            'label': 'student first name autocapitalize',
+            'fieldName': 'FirstName',
+            'vtype': 'required',
+            'transform': Ext.util.Format.capitalize
         }, {
-            "id": "student-middle-name-preserve-case",
-            "label": "student middle name preserve case",
-            "fieldName": "MiddleName"
+            'id': 'student-middle-name-preserve-case',
+            'label': 'student middle name preserve case',
+            'fieldName': 'MiddleName'
         }, {
-            "id": "student-middle-name-autocapitalize",
-            "label": "student middle name autocapitalize",
-            "fieldName": "MiddleName",
-            "transform": Ext.util.Format.capitalize
+            'id': 'student-middle-name-autocapitalize',
+            'label': 'student middle name autocapitalize',
+            'fieldName': 'MiddleName',
+            'transform': Ext.util.Format.capitalize
         }, {
-            "id": "student-last-name-preserve-case",
-            "label": "student last name preserve case",
-            "fieldName": "LastName",
-            "vtype": "required"
+            'id': 'student-last-name-preserve-case',
+            'label': 'student last name preserve case',
+            'fieldName': 'LastName',
+            'vtype': 'required'
         }, {
-            "id": "student-last-name-autocapitalize",
-            "label": "student-last-name-autocapitalize",
-            "fieldName": "LastName",
-            "vtype": "required",
-            "transform": Ext.util.Format.capitalize
+            'id': 'student-last-name-autocapitalize',
+            'label': 'student-last-name-autocapitalize',
+            'fieldName': 'LastName',
+            'vtype': 'required',
+            'transform': Ext.util.Format.capitalize
         }, {
-            "id": "graduation-year",
-            "label": "Graduation Year",
-            "fieldName": "GraduationYear",
-            "vtype": "year"
+            'id': 'graduation-year',
+            'label': 'Graduation Year',
+            'fieldName': 'GraduationYear',
+            'vtype': 'year'
         }, {
-            "id": "student-id",
-            "label": "Student ID",
-            "fieldName": "StudentID"
+            'id': 'student-id',
+            'label': 'Student ID',
+            'fieldName': 'StudentID'
         }, {
-            "id": "gender",
-            "label": "Gender",
-            "fieldName": "Gender"
+            'id': 'gender',
+            'label': 'Gender',
+            'fieldName': 'Gender'
         }, {
-            "id": "gender-full-word",
-            "label": "Gender - full word",
-            "fieldName": "Gender"
+            'id': 'gender-full-word',
+            'label': 'Gender - full word',
+            'fieldName': 'Gender'
         }, {
-            "id": "advisor-first-name-preserve-case",
-            "label": "advisor first name preserve case",
-            "fieldName": "AdvisorFirstName"
+            'id': 'advisor-first-name-preserve-case',
+            'label': 'advisor first name preserve case',
+            'fieldName': 'AdvisorFirstName'
         }, {
-            "id": "advisor-first-name-autocapitalize",
-            "label": "advisor first name autocapitalize",
-            "fieldName": "AdvisorFirstName",
-            "transform": Ext.util.Format.capitalize
+            'id': 'advisor-first-name-autocapitalize',
+            'label': 'advisor first name autocapitalize',
+            'fieldName': 'AdvisorFirstName',
+            'transform': Ext.util.Format.capitalize
         }, {
-            "id": "advisor-middle-name-preserve-case",
-            "label": "advisor middle name preserve case",
-            "fieldName": "AdvisorMiddleName"
+            'id': 'advisor-middle-name-preserve-case',
+            'label': 'advisor middle name preserve case',
+            'fieldName': 'AdvisorMiddleName'
         }, {
-            "id": "advisor-middle-name-autocapitalize",
-            "label": "advisor middle name autocapitalize",
-            "fieldName": "AdvisorMiddleName",
-            "transform": Ext.util.Format.capitalize
+            'id': 'advisor-middle-name-autocapitalize',
+            'label': 'advisor middle name autocapitalize',
+            'fieldName': 'AdvisorMiddleName',
+            'transform': Ext.util.Format.capitalize
         }, {
-            "id": "advisor-last-name-preserve-case",
-            "label": "advisor last name preserve case",
-            "fieldName": "AdvisorLastName"
+            'id': 'advisor-last-name-preserve-case',
+            'label': 'advisor last name preserve case',
+            'fieldName': 'AdvisorLastName'
         }, {
-            "id": "advisor-last-name-autocapitalize",
-            "label": "advisor last name autocapitalize",
-            "fieldName": "AdvisorLastName",
-            "transform": Ext.util.Format.capitalize
+            'id': 'advisor-last-name-autocapitalize',
+            'label': 'advisor last name autocapitalize',
+            'fieldName': 'AdvisorLastName',
+            'transform': Ext.util.Format.capitalize
         }],
         items: [{
             id: 'instructions',
@@ -190,6 +190,10 @@ Ext.define('SlateCSV.view.Importer', {
 
     updateUseFirstRowForColumnNames: function(value, oldValue) {
         this.fireEvent('updateusefirstrowforcolumnnames', this, value, oldValue);
+    },
+
+    importData: function() {
+        this.fireEvent('dataimportcontinue');
     },
 
     updateImportStatus: function(newStatus) {
@@ -280,30 +284,34 @@ Ext.define('SlateCSV.view.Importer', {
 
     /**
      * Returns validation window object or creates one if it had not yet been created
-     * @return {Array} An array of comboboxes that have a value set to an import field.
+     * @return {Ext.window.Window} A window containing a SlateCSV.view.ValidationResult
      */
     getValidationWindow: function() {
-        var win = this.validationWindow,
+        var me = this,
+            win = me.validationWindow,
             view;
 
-        // Create the ToolTip component if it has not yet been created
+        // Create the window if it has not yet been created
         if (!win) {
-            console.log('no win, creating');
-            view = Ext.widget('slatecsv-validation-view');
+            view = Ext.widget('slatecsv-view-validationresult');
             win = Ext.create('Ext.window.Window', {
-                title: 'Data validation warning',
+                title: 'Data validation',
+                xtype: 'slatecsv-validationwindow',
+                importer: me,
+                modal: true,
                 closeAction: 'hide',
                 bodyPadding: 12,
                 layout: 'fit',
-                items: [ view ]
+                items: [ view ],
+                buttons: [{
+                    text: 'continue',
+                    handler: function(button) {
+                        button.up('window').importer.importData();
+                    }
+                }]
             });
-            this.setValidationWindow(win);
+            me.setValidationWindow(win);
         }
-        else {
-            console.log('had win, no need to create');
-        }
-
-        console.log(win);
 
         return win;
     }
