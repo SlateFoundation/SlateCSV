@@ -390,7 +390,7 @@ Ext.define('SlateCSV.view.ImporterController', {
         fieldsLength = fields.length;
 
         store = Ext.create('Ext.data.Store', {
-            model: 'SlateAdmin.model.person.Person',
+            model: 'Slate.model.person.Person',
             proxy: {
                 type: 'slaterecords',
                 url: '/people'
@@ -423,7 +423,7 @@ Ext.define('SlateCSV.view.ImporterController', {
 
             }
             if (rowValid) {
-                rec = Ext.create('SlateAdmin.model.person.Person',data);
+                rec = Ext.create('Slate.model.person.Person',data);
                 rec.set('Class','Slate\\Student');
                 store.add(rec);
             }
