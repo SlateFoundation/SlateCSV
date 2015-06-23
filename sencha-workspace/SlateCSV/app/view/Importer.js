@@ -4,7 +4,6 @@ Ext.define('SlateCSV.view.Importer', {
     xtype: 'slatecsv-importer',
     requires: [
         'SlateCSV.view.ImporterController',
-        'SlateCSV.overrides.CustomVTypes',
         'SlateCSV.view.ValidationResult'
     ],
 
