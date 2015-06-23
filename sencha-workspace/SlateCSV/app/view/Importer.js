@@ -227,6 +227,7 @@ Ext.define('SlateCSV.view.Importer', {
                 items: [ view ],
                 buttons: [{
                     text: 'continue',
+                    action: 'continue',
                     handler: function(button) {
                         button.up('window').importer.importData();
                     }
