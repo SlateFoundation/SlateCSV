@@ -357,7 +357,7 @@ Ext.define('SlateCSV.view.ImporterController', {
             }
 
             rec = Ext.create('Slate.model.person.Person',data);
-            rec.set('Class','Slate\\Student');
+            rec.set('Class','Slate\\People\\Student');
 
             if (rec.isValid()) {
                 store.add(rec);
@@ -376,6 +376,10 @@ Ext.define('SlateCSV.view.ImporterController', {
 
                             if (!summaryItem) {
                                 meta = fieldMeta.getByKey(key);
+                                if (!meta) {
+                                    //shouldn't arrive here, but just in case....
+                                    meta = {fieldLabel: 'unknown', label: 'unknown'};
+                                }
                                 summaryItem = {
                                     id: key+'|'+error,
                                     fieldLabel: meta.fieldLabel,
@@ -393,7 +397,7 @@ Ext.define('SlateCSV.view.ImporterController', {
         }
         view.setImportStore(store);
 
-        validationWindow.down('slatecsv-view-validationresult').update({
+        validationWindow.down('slatecsv-view-validationresult #validation-summary').update({
             totalRows: csvDataLength,
             validRows: validRows,
             inValidRows: inValidRows,
@@ -411,22 +415,41 @@ Ext.define('SlateCSV.view.ImporterController', {
             store = view.getImportStore(),
             validationWindow = view.getValidationWindow();
 
+        validationWindow.down('slatecsv-view-validationresult').setActiveItem(1);
+        validationWindow.down('button[action="continue"]').disable();
+
+        store.getProxy().timeout = 60000;
+
+        console.log(store.getProxy());
+        console.log(store.getProxy().timeout);
+
         store.sync({
             callback: function(batch, options) {
-                console.log('sync callback!!!!');
-                console.log(batch);
-                console.log(options);
-                validationWindow.hide();
-            },
-            success: function(batch, options) {
-                console.log('success callback!!!!');
-                console.log(batch);
-                console.log(options);
+                console.log('callback');
+                if (!validationWindow.isHidden()) {
+                    validationWindow.hide();
+                }
             },
             failure: function(batch, options) {
-                console.log('failure callback!!!!');
-                console.log(batch);
-                console.log(options);
+                console.log('failure');
+                var operation = batch.getOperations()[0],
+                    response = operation.getResponse(),
+                    responseText = Ext.decode(response.responseText,true),
+                    failures = responseText.failed.length,
+                    message = responseText.message;
+
+                Ext.Msg.alert('Import Failed', message);
+            },
+            success: function(batch, options) {
+                console.log('success');
+                var operation = batch.getOperations()[0],
+                    response = operation.getResponse(),
+                    responseText = Ext.decode(response.responseText,true);
+
+                console.log('success callback!!!!');
+                console.log(operation);
+                console.log(response);
+                console.log(responseText);
             }
         });
     }
