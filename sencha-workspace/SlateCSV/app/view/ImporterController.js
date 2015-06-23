@@ -390,11 +390,13 @@ Ext.define('SlateCSV.view.ImporterController', {
         fieldsLength = fields.length;
 
         store = Ext.create('Ext.data.Store', {
-            model: 'Slate.model.person.Person',
+            model: 'Slate.model.person.Person'
+/*
             proxy: {
                 type: 'slaterecords',
                 url: '/people'
             }
+*/
         });
 
         for (i = 0; i < csvDataLength; i++) {
@@ -413,25 +415,35 @@ Ext.define('SlateCSV.view.ImporterController', {
                 }
 
                 // validate the field if vtype has been set
-                if (field.vtype && vtypes[field.vtype](value)) {
-                    data[field.fieldName] = value;
-                } else {
-                    // row will be discarded if it has invalid fields
-                    rowValid = false;
-                    break;
+                if (field.vtype) {
+                    if (vtypes[field.vtype](value)) {
+                        data[field.fieldName] = value;
+                    } else {
+                        // row will be discarded if it has invalid fields
+                        console.log('invalid field: '+field.fieldName+' = ' + value);
+                        rowValid = false;
+                        break;
+                    }
                 }
 
             }
             if (rowValid) {
+                console.log('row is valid, adding record');
                 rec = Ext.create('Slate.model.person.Person',data);
                 rec.set('Class','Slate\\Student');
                 store.add(rec);
             }
         }
 
-        console.log('syncing store');
-        console.log(store);
-        console.log(store.getProxy());
+//        console.log('syncing store');
+//        console.log(store);
+//        console.log(store.getProxy());
+//        console.log(store.first());
+//        console.log(store.getUnfiltered().length);
+//        console.log(store.getUnfiltered().createFiltered(store.filterNew).getRange().length);
+//        console.log(store.getCount());
+//        console.log(store.getNewRecords().length);
+        store.sync();
         store.sync({
             callback: function(batch, options) {
                 console.log('sync callback!!!!');
