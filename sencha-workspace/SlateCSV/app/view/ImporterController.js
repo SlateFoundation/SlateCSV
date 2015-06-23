@@ -293,96 +293,19 @@ Ext.define('SlateCSV.view.ImporterController', {
             csvData = view.getCsvData(),
             csvDataLength = csvData.length,
             cols = Ext.Object.getKeys(csvData[0]),
-            vtypes = Ext.form.VTypes,
-            validations = [],
-            validationsLength = 0,
+            fieldMeta = new Ext.util.Collection(),
+            errorSummary = new Ext.util.Collection(),
             validationWindow = view.getValidationWindow(),
-            failures = 0,
-            rowFailure = false,
             validRows = 0,
-            i = 0,
-            j = 0,
-            validation,
-            row,
-            field;
-
-        for (; i < comboBoxesLength; i++) {
-            combo = comboBoxes[i];
-
-            if (combo.getValue() && combo.getValue()!=="none") {
-                field = combo.findRecordByValue(combo.getValue());
-
-                if (field.get('vtype') && vtypes[field.get('vtype')] ) {
-                    validations.push({
-                        fieldName: field.get('fieldName'),
-                        fieldLabel: field.get('label'),
-                        dataIndex: combo.dataIndex,
-                        label: combo.getFieldLabel(),
-                        vtype: field.get('vtype'),
-                        vtext: (field.get('vtypeText') || vtypes[field.get('vtype') +'Text']),
-                        transform: field.get('transform'),
-                        invalidRows: []
-                    });
-                }
-            }
-        }
-
-        validationsLength = validations.length;
-
-        for (i = 0; i < csvDataLength; i++) {
-            row = csvData[i];
-            rowFailure = false;
-
-            // validate the row
-            for (j = 0; j < validationsLength; j++) {
-                validation = validations[j];
-                value = useFirstRowForColumnNames ? row[validation.label] : row[cols[validation.dataIndex]];
-                fn = validation.transform;
-
-                if (fn && typeof(fn) === 'function') {
-                    value = fn(value);
-                }
-
-                if (!vtypes[validation.vtype](value)) {
-                    validation.invalidRows.push(i);
-                    failures++;
-                    rowFailure = true;
-                }
-            }
-            if (!rowFailure) {
-                validRows++;
-            }
-        }
-
-        validationWindow.down('slatecsv-view-validationresult').update({
-            totalRows: csvDataLength,
-            validRows: validRows,
-            failures: failures,
-            validations: validations
-        });
-
-        validationWindow.show();
-
-    },
-
-    onContinueButtonClick: function() {
-        console.log('onContinueButtonClick');
-        var me = this,
-            view = me.getView(),
-            useFirstRowForColumnNames = view.getUseFirstRowForColumnNames(),
-            comboBoxes = view.query('slatecsv-importerfield'),
-            comboBoxesLength = comboBoxes.length,
-            csvData = view.getCsvData(),
-            csvDataLength = csvData.length,
-            cols = Ext.Object.getKeys(csvData[0]),
-            vtypes = Ext.form.VTypes,
+            inValidRows = 0,
+            failures = 0,
             i = 0,
             j = 0,
             row,
             fields = [],
             fieldsLength,
-            data,
             comboRecord,
+            data,
             store;
 
         for (; i < comboBoxesLength; i++) {
@@ -399,6 +322,12 @@ Ext.define('SlateCSV.view.ImporterController', {
                     vtype: comboRecord.get('vtype'),
                     transform: comboRecord.get('transform')
                 });
+
+                fieldMeta.add({
+                    id: comboRecord.get('fieldName'),
+                    fieldLabel: comboRecord.get('label'),
+                    label: combo.getFieldLabel()
+                });
             }
         }
 
@@ -406,12 +335,6 @@ Ext.define('SlateCSV.view.ImporterController', {
 
         store = Ext.create('Ext.data.Store', {
             model: 'Slate.model.person.Person'
-/*
-            proxy: {
-                type: 'slaterecords',
-                url: '/people'
-            }
-*/
         });
 
         for (i = 0; i < csvDataLength; i++) {
@@ -429,48 +352,83 @@ Ext.define('SlateCSV.view.ImporterController', {
                     value = fn(value);
                 }
 
-                // validate the field if vtype has been set
-                if (field.vtype) {
-                    if (vtypes[field.vtype](value)) {
-                        data[field.fieldName] = value;
-                    } else {
-                        // row will be discarded if it has invalid fields
-                        console.log('invalid field: '+field.fieldName+' = ' + value);
-                        rowValid = false;
-                        break;
+                data[field.fieldName] = value;
+
+            }
+
+            rec = Ext.create('Slate.model.person.Person',data);
+            rec.set('Class','Slate\\Student');
+
+            if (rec.isValid()) {
+                store.add(rec);
+                validRows++;
+            } else {
+                errors = rec.getValidation().getData();
+                inValidRows++;
+
+                for (var key in errors) {
+                    if (errors.hasOwnProperty(key)) {
+                        error = errors[key];
+
+                        if (error!==true) { // field in error data object set to true means no error
+                            summaryItem = errorSummary.getByKey(key+'|'+error);
+                            failures++;
+
+                            if (!summaryItem) {
+                                meta = fieldMeta.getByKey(key);
+                                summaryItem = {
+                                    id: key+'|'+error,
+                                    fieldLabel: meta.fieldLabel,
+                                    label: meta.label,
+                                    vtext: error,
+                                    invalidRows: []
+                                };
+                            }
+                            summaryItem.invalidRows.push(i+2);
+                            errorSummary.add(summaryItem);
+                        }
                     }
                 }
-
-            }
-            if (rowValid) {
-                console.log('row is valid, adding record');
-                rec = Ext.create('Slate.model.person.Person',data);
-                rec.set('Class','Slate\\Student');
-                store.add(rec);
             }
         }
+        view.setImportStore(store);
 
-//        console.log('syncing store');
-//        console.log(store);
-//        console.log(store.getProxy());
-//        console.log(store.first());
-//        console.log(store.getUnfiltered().length);
-//        console.log(store.getUnfiltered().createFiltered(store.filterNew).getRange().length);
-//        console.log(store.getCount());
-//        console.log(store.getNewRecords().length);
-        store.sync();
+        validationWindow.down('slatecsv-view-validationresult').update({
+            totalRows: csvDataLength,
+            validRows: validRows,
+            inValidRows: inValidRows,
+            failures: failures,
+            validations: errorSummary.getRange()
+        });
+
+        validationWindow.show();
+
+    },
+
+    onContinueButtonClick: function() {
+        var me = this,
+            view = me.getView(),
+            store = view.getImportStore(),
+            validationWindow = view.getValidationWindow();
+
         store.sync({
             callback: function(batch, options) {
                 console.log('sync callback!!!!');
+                console.log(batch);
+                console.log(options);
+                validationWindow.hide();
             },
             success: function(batch, options) {
                 console.log('success callback!!!!');
+                console.log(batch);
+                console.log(options);
             },
             failure: function(batch, options) {
                 console.log('failure callback!!!!');
+                console.log(batch);
+                console.log(options);
             }
         });
-
     }
 
 });

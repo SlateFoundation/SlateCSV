@@ -17,13 +17,11 @@ Ext.define('SlateCSV.importer.People', {
         }, {
             'id': 'student-first-name-preserve-case',
             'label': 'student first name preserve case',
-            'fieldName': 'FirstName',
-            'vtype': 'required'
+            'fieldName': 'FirstName'
         }, {
             'id': 'student-first-name-autocapitalize',
             'label': 'student first name autocapitalize',
             'fieldName': 'FirstName',
-            'vtype': 'required',
             'transform': Ext.util.Format.capitalize
         }, {
             'id': 'student-middle-name-preserve-case',
@@ -37,19 +35,16 @@ Ext.define('SlateCSV.importer.People', {
         }, {
             'id': 'student-last-name-preserve-case',
             'label': 'student last name preserve case',
-            'fieldName': 'LastName',
-            'vtype': 'required'
+            'fieldName': 'LastName'
         }, {
             'id': 'student-last-name-autocapitalize',
             'label': 'student-last-name-autocapitalize',
             'fieldName': 'LastName',
-            'vtype': 'required',
             'transform': Ext.util.Format.capitalize
         }, {
             'id': 'graduation-year',
             'label': 'Graduation Year',
-            'fieldName': 'GraduationYear',
-            'vtype': 'year'
+            'fieldName': 'GraduationYear'
         }, {
             'id': 'student-id',
             'label': 'Student ID',

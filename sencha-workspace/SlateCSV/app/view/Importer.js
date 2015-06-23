@@ -16,6 +16,7 @@ Ext.define('SlateCSV.view.Importer', {
         csvData: null,
         useFirstRowForColumnNames: true,
         importStatus: null,
+        importStore: null,
         maxPreviewRows: 5,
         validationToolTip: null,
         validationWindow: null,
