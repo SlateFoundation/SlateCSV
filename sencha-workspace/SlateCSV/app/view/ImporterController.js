@@ -17,7 +17,8 @@ Ext.define('SlateCSV.view.ImporterController', {
                 afterrender: 'onComponentAfterRender',
                 csvtextchange: 'onCSVTextChange',
                 updateusefirstrowforcolumnnames: 'onUseFirstRowForColumnNamesChange',
-                dataimportcontinue: 'onContinueButtonClick'
+                dataimportcontinue: 'onContinueButtonClick',
+                dataimportcancel: 'onCancelButtonClick'
             },
             'slatecsv-importerfield': {
                 beforequery: 'onBeforeQueryComboBox',
@@ -286,6 +287,7 @@ Ext.define('SlateCSV.view.ImporterController', {
 
     onImportButtonClick: function() {
         var me = this,
+            start = (new Date()).getTime(), //benchmark
             view = me.getView(),
             useFirstRowForColumnNames = view.getUseFirstRowForColumnNames(),
             comboBoxes = view.query('slatecsv-importerfield'),
@@ -402,7 +404,8 @@ Ext.define('SlateCSV.view.ImporterController', {
             validRows: validRows,
             inValidRows: inValidRows,
             failures: failures,
-            validations: errorSummary.getRange()
+            validations: errorSummary.getRange(),
+            benchmark: (new Date()).getTime() - start
         });
 
         validationWindow.show();
@@ -415,43 +418,84 @@ Ext.define('SlateCSV.view.ImporterController', {
             store = view.getImportStore(),
             validationWindow = view.getValidationWindow();
 
+        // disable button and show loading message
         validationWindow.down('slatecsv-view-validationresult').setActiveItem(1);
         validationWindow.down('button[action="continue"]').disable();
+        validationWindow.down('button[action="cancel"]').disable();
 
-        store.getProxy().timeout = 60000;
-
-        console.log(store.getProxy());
-        console.log(store.getProxy().timeout);
+        // server timeout is 30000 so this doesn't help
+        //store.getProxy().timeout = 60000;
 
         store.sync({
             callback: function(batch, options) {
                 console.log('callback');
-                if (!validationWindow.isHidden()) {
-                    validationWindow.hide();
-                }
+                me.resetValidationWindow();
             },
             failure: function(batch, options) {
                 console.log('failure');
                 var operation = batch.getOperations()[0],
                     response = operation.getResponse(),
+                    responseText,
+                    failures,
+                    message;
+
+                if (response && responseText && responseText.failed) {
                     responseText = Ext.decode(response.responseText,true),
                     failures = responseText.failed.length,
                     message = responseText.message;
+                    Ext.Msg.alert('Import Failed', message);
+                } else {
+                    Ext.Msg.alert('Import Failed', 'Data could not be imported');
+                }
 
-                Ext.Msg.alert('Import Failed', message);
             },
             success: function(batch, options) {
-                console.log('success');
                 var operation = batch.getOperations()[0],
                     response = operation.getResponse(),
-                    responseText = Ext.decode(response.responseText,true);
+                    message ='',
+                    resText;
 
-                console.log('success callback!!!!');
-                console.log(operation);
-                console.log(response);
-                console.log(responseText);
+                me.resetValidationWindow();
+
+                if (response && response.responseText) {
+                    resText = Ext.decode(response.responseText,true);
+
+                    if (resText) {
+                        if (resText.message) {
+                            message += '<p>'+resText.message+'</p>';
+                        }
+                        if (resText.data && resText.data.length) {
+                            message += '<p>Rows successfully imported: '+resText.data.length+'</p>';
+                        }
+                        if (resText.data && resText.failed.length) {
+                            message += '<p>Rows unable to be imported: : '+resText.failed.length+'</p>';
+                        }
+                    }
+                    Ext.Msg.alert('Import Successful', message);
+                } else {
+                    Ext.Msg.alert('Unknown Result', 'The server indicated that the import was successful, but did not send a message');
+                }
             }
         });
-    }
+    },
 
+    onCancelButtonClick: function() {
+        var me = this,
+            view = me.getView();
+
+        view.setImportStore(null);
+        me.resetValidationWindow();
+    },
+
+    resetValidationWindow: function() {
+        var me = this,
+            view = me.getView(),
+            validationWindow = view.getValidationWindow();
+
+        validationWindow.hide();
+        validationWindow.down('slatecsv-view-validationresult #validation-summary').update('');
+        validationWindow.down('slatecsv-view-validationresult').setActiveItem(0);
+        validationWindow.down('button[action="continue"]').enable();
+        validationWindow.down('button[action="cancel"]').enable();
+    }
 });
