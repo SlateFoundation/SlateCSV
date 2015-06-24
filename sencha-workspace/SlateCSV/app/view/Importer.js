@@ -118,6 +118,10 @@ Ext.define('SlateCSV.view.Importer', {
         this.fireEvent('dataimportcontinue');
     },
 
+    cancelImport: function() {
+        this.fireEvent('dataimportcancel');
+    },
+
     updateImportStatus: function(newStatus) {
         var me = this,
             statusToolbar = me.down('#statusToolbar'),
@@ -219,6 +223,7 @@ Ext.define('SlateCSV.view.Importer', {
             win = Ext.create('Ext.window.Window', {
                 title: 'Data validation',
                 xtype: 'slatecsv-validationwindow',
+                minWidth: 360,
                 importer: me,
                 modal: true,
                 closeAction: 'hide',
@@ -226,6 +231,12 @@ Ext.define('SlateCSV.view.Importer', {
                 layout: 'fit',
                 items: [ view ],
                 buttons: [{
+                    text: 'cancel',
+                    action: 'cancel',
+                    handler: function(button) {
+                        button.up('window').importer.cancelImport();
+                    }
+                },{
                     text: 'continue',
                     action: 'continue',
                     handler: function(button) {
