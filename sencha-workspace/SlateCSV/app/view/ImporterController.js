@@ -399,6 +399,7 @@ Ext.define('SlateCSV.view.ImporterController', {
         }
         view.setImportStore(store);
 
+
         validationWindow.down('slatecsv-view-validationresult #validation-summary').update({
             totalRows: csvDataLength,
             validRows: validRows,
@@ -407,6 +408,10 @@ Ext.define('SlateCSV.view.ImporterController', {
             validations: errorSummary.getRange(),
             benchmark: (new Date()).getTime() - start
         });
+
+        if (validRows === 0) {
+            validationWindow.down('button[action="continue"]').disable();
+        }
 
         validationWindow.show();
 
@@ -425,6 +430,10 @@ Ext.define('SlateCSV.view.ImporterController', {
 
         // server timeout is 30000 so this doesn't help
         //store.getProxy().timeout = 60000;
+
+        store.getProxy().include = '';
+
+        console.log(store.getProxy());
 
         store.sync({
             callback: function(batch, options) {
@@ -450,6 +459,7 @@ Ext.define('SlateCSV.view.ImporterController', {
 
             },
             success: function(batch, options) {
+                console.log('success');
                 var operation = batch.getOperations()[0],
                     response = operation.getResponse(),
                     message ='',

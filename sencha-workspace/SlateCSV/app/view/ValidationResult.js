@@ -10,9 +10,6 @@ Ext.define('SlateCSV.view.ValidationResult', {
             itemId: 'validation-summary',
             tpl: [
                 '<table>',
-                // TODO: remove debugging info
-                '<tr><td colspan="2">Invalid Fields: {failures}</td></tr>',
-                '<tr><td colspan="2">Time: {benchmark}ms</td></tr>',
                 '<tpl if="failures &gt; 0">',
                     '<tpl for="validations">',
                         '<tpl if="invalidRows.length &gt; 0">',
@@ -31,6 +28,14 @@ Ext.define('SlateCSV.view.ValidationResult', {
                 '<tpl else>',
                     '<tr><td colspan="2">All validations passed</td></tr>',
                 '</tpl>',
+                '</table>',
+                // TODO: remove debugging info
+                '<table border="1">',
+                '<tr><td>Total Rows: {totalRows}</td></tr>',
+                '<tr><td>Valid Rows: {validRows}</td></tr>',
+                '<tr><td>Invalid Rows: {inValidRows}</td></tr>',
+                '<tr><td>Invalid Fields: {failures}</td></tr>',
+                '<tr><td>Time: {benchmark}ms</td></tr>',
                 '</table>',
             {
                 disableFormats: true,
