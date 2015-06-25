@@ -341,7 +341,7 @@ Ext.define('SlateCSV.view.ImporterController', {
                 type: 'slaterecords',
                 url: '/people',
                 timeout: 5 * 60 * 1000
-            },
+            }
         });
 
         for (i = 0; i < csvDataLength; i++) {
@@ -437,11 +437,9 @@ Ext.define('SlateCSV.view.ImporterController', {
 
         store.sync({
             callback: function(batch, options) {
-                console.log('callback');
                 me.resetValidationWindow();
             },
             failure: function(batch, options) {
-                console.log('failure');
                 var operation = batch.getOperations()[0],
                     response = operation.getResponse(),
                     responseText,
@@ -459,7 +457,6 @@ Ext.define('SlateCSV.view.ImporterController', {
 
             },
             success: function(batch, options) {
-                console.log('success');
                 var operation = batch.getOperations()[0],
                     response = operation.getResponse(),
                     message ='',
