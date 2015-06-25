@@ -19,5 +19,7 @@ Ext.define('SlateCSV.Application', {
         if (pageParams.apiHost) {
             Slate.API.setHostname(pageParams.apiHost);
         }
+
+        Slate.API.setTimeout(5 * 60 * 1000);
     }
 });

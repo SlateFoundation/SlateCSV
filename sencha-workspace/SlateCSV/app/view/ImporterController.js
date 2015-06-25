@@ -336,7 +336,12 @@ Ext.define('SlateCSV.view.ImporterController', {
         fieldsLength = fields.length;
 
         store = Ext.create('Ext.data.Store', {
-            model: 'Slate.model.person.Person'
+            model: 'Slate.model.person.Person',
+            proxy: {
+                type: 'slaterecords',
+                url: '/people',
+                timeout: 5 * 60 * 1000
+            },
         });
 
         for (i = 0; i < csvDataLength; i++) {
@@ -427,11 +432,6 @@ Ext.define('SlateCSV.view.ImporterController', {
         validationWindow.down('slatecsv-view-validationresult').setActiveItem(1);
         validationWindow.down('button[action="continue"]').disable();
         validationWindow.down('button[action="cancel"]').disable();
-
-        // server timeout is 30000 so this doesn't help
-        //store.getProxy().timeout = 60000;
-
-        store.getProxy().include = '';
 
         console.log(store.getProxy());
 
