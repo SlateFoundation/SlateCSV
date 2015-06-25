@@ -45,6 +45,9 @@
      *      ]
      */
     "requires": [
+        // TODO: "jarvis-apikit" and "emergence-apikit" can be deleted once chaki supports recursive dependencies
+        "jarvis-apikit",
+        "emergence-apikit",
         "slate-core-data"
     ],
 
