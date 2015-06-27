@@ -202,6 +202,7 @@ Ext.define('SlateCSV.view.ImporterController', {
         if (mappedFieldNames) {
             status.selectedColumns = mappedFieldNames.length;
         }
+
         if (csvData && csvData.length > 0) {
             cols = Ext.Object.getKeys(csvData[0]);
             status.totalColumns = cols.length;
@@ -384,8 +385,11 @@ Ext.define('SlateCSV.view.ImporterController', {
                             if (!summaryItem) {
                                 meta = fieldMeta.getByKey(key);
                                 if (!meta) {
-                                    //shouldn't arrive here, but just in case....
-                                    meta = {fieldLabel: 'unknown', label: 'unknown'};
+                                    /*
+                                     * shouldn't arrive here, but just in case..
+                                     * could be a required record not in the importers requiredFields array.
+                                     */
+                                    meta = {fieldLabel: key, label: 'unknown'};
                                 }
                                 summaryItem = {
                                     id: key+'|'+error,
@@ -432,8 +436,6 @@ Ext.define('SlateCSV.view.ImporterController', {
         validationWindow.down('slatecsv-view-validationresult').setActiveItem(1);
         validationWindow.down('button[action="continue"]').disable();
         validationWindow.down('button[action="cancel"]').disable();
-
-        console.log(store.getProxy());
 
         store.sync({
             callback: function(batch, options) {
